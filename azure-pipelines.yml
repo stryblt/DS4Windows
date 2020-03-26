@@ -34,15 +34,21 @@ steps:
     platform: 'x64'
     configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
+- task: CopyFiles@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    contents: 'DS4Windows/bin/**'
+    targetFolder: '$(Build.ArtifactStagingDirectory)/x64'
 
-- task: VSTest@2
-  inputs:
-    platform: x64
-    configuration: '$(buildConfiguration)'
+
+#- task: VSTest@2
+#  inputs:
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
+
+#- task: VSTest@2
+#  inputs:
+#    platform: x64
+#    configuration: '$(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
   inputs:
