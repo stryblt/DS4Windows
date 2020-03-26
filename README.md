@@ -12,8 +12,8 @@ This repository is a fork of the work of Jays2Kings and Ryochan7, mainly for cre
 
 ## Downloads
 
-- **[Main builds of DS4Windows (by Ryochan7)](https://github.com/Ryochan7/DS4Windows/releases)**
-- **Private builds from this repo (by Me) ... TBD**
+- [Private builds from this repo (by stryblt)](https://github.com/stryblt/DS4Windows/releases)
+- [Main builds of DS4Windows (by Ryochan7)](https://github.com/Ryochan7/DS4Windows/releases)
 
 ## Requirements
 
