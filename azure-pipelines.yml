@@ -37,7 +37,7 @@ steps:
 - task: CopyFiles@2
   inputs:
     contents: 'DS4Windows/bin/**'
-    targetFolder: '$(Build.ArtifactStagingDirectory)/x64'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
 
 
 #- task: VSTest@2
