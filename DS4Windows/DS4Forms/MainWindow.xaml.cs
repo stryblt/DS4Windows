@@ -162,10 +162,21 @@ namespace DS4WinWPF.DS4Forms
             // Sorry other devs, gonna have to find your own server
             Uri url = new Uri("https://raw.githubusercontent.com/Ryochan7/DS4Windows/jay/DS4Windows/newest.txt");
             string filename = Global.appdatapath + "\\version.txt";
+            bool success = false;
             using (var downloadStream = new FileStream(filename, FileMode.Create))
             {
                 Task<System.Net.Http.HttpResponseMessage> temp = App.requestClient.GetAsync(url.ToString(), downloadStream);
-                temp.Wait();
+                try
+                {
+                    temp.Wait();
+                    if (temp.Result.IsSuccessStatusCode) success = true;
+                }
+                catch (AggregateException) { }
+            }
+
+            if (!success && File.Exists(filename))
+            {
+                File.Delete(filename);
             }
         }
 
@@ -196,14 +207,22 @@ namespace DS4WinWPF.DS4Forms
         private void Check_Version(bool showstatus = false)
         {
             string version = Global.exeversion;
-            string newversion = File.ReadAllText(Global.appdatapath + "\\version.txt").Trim();
+            string newversion = string.Empty;
+            string versionFilePath = Global.appdatapath + "\\version.txt";
+            bool versionFileExists = File.Exists(versionFilePath);
+            if (versionFileExists)
+            {
+                newversion = File.ReadAllText(versionFilePath).Trim();
+            }
+
             if (!string.IsNullOrWhiteSpace(newversion) && version.CompareTo(newversion) != 0)
             {
                 MessageBoxResult result = MessageBoxResult.No;
                 Dispatcher.Invoke(() =>
                 {
-                    result = MessageBox.Show(Properties.Resources.DownloadVersion.Replace("*number*", newversion),
-Properties.Resources.DS4Update, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    UpdaterWindow updaterWin = new UpdaterWindow(newversion);
+                    updaterWin.ShowDialog();
+                    result = updaterWin.Result;
                 });
 
                 if (result == MessageBoxResult.Yes)
@@ -251,12 +270,15 @@ Properties.Resources.DS4Update, MessageBoxButton.YesNo, MessageBoxImage.Question
                 }
                 else
                 {
-                    File.Delete(Global.appdatapath + "\\version.txt");
+                    if (versionFileExists)
+                        File.Delete(Global.appdatapath + "\\version.txt");
                 }
             }
             else
             {
-                File.Delete(Global.appdatapath + "\\version.txt");
+                if (versionFileExists)
+                    File.Delete(Global.appdatapath + "\\version.txt");
+
                 if (showstatus)
                 {
                     Dispatcher.Invoke(() => MessageBox.Show(Properties.Resources.UpToDate, "DS4Windows Updater"));

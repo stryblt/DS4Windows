@@ -132,6 +132,9 @@ namespace DS4WinWPF
             Logger logger = logHolder.Logger;
             string version = DS4Windows.Global.exeversion;
             logger.Info($"DS4Windows version {version}");
+            logger.Info($"OS Version: {Environment.OSVersion}");
+            logger.Info($"OS Product Name: {DS4Windows.Util.GetOSProductName()}");
+            logger.Info($"OS Release ID: {DS4Windows.Util.GetOSReleaseId()}");
             //logger.Info("DS4Windows version 2.0");
             logger.Info("Logger created");
 
@@ -170,6 +173,7 @@ namespace DS4WinWPF
             CreateIPCClassNameMMF(source.Handle);
 
             window.CheckMinStatus();
+            rootHub.LogDebug($"Running as {(DS4Windows.Global.IsAdministrator() ? "Admin" : "User")}");
             rootHub.LaunchHidGuardHelper();
             window.LateChecks(parser);
         }
@@ -193,6 +197,19 @@ namespace DS4WinWPF
                     });
                 }
             }
+            else
+            {
+                Logger logger = logHolder.Logger;
+                Exception exp = e.ExceptionObject as Exception;
+                if (e.IsTerminating)
+                {
+                    logger.Error($"Thread Crashed with message {exp.Message}");
+                    logger.Error(exp.ToString());
+
+                    rootHub?.PrepareAbort();
+                    CleanShutdown();
+                }
+            }
         }
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -200,10 +217,10 @@ namespace DS4WinWPF
             //Console.WriteLine("App Crashed");
             //Console.WriteLine(e.Exception.StackTrace);
             Logger logger = logHolder.Logger;
-            logger.Error($"App Crashed with message {e.Exception.Message}");
+            logger.Error($"Thread Crashed with message {e.Exception.Message}");
             logger.Error(e.Exception.ToString());
-            LogManager.Flush();
-            LogManager.Shutdown();
+            //LogManager.Flush();
+            //LogManager.Shutdown();
         }
 
         private bool CreateConfDirSkeleton()
@@ -481,7 +498,10 @@ namespace DS4WinWPF
                     Task.Run(() =>
                     {
                         if (rootHub.running)
+                        {
                             rootHub.Stop();
+                            rootHub.ShutDown();
+                        }
                     }).Wait();
                 }
 
