@@ -207,6 +207,11 @@
 
                 </local:AutoProfiles>
             </TabItem>
+            <TabItem Header="Output Slots" IsEnabled="{Binding FullTabsEnabled,Mode=OneWay}">
+                <local:OutputSlotManagerControl x:Name="slotManControl">
+
+                </local:OutputSlotManagerControl>
+            </TabItem>
             <TabItem x:Name="settingsTab" Header="{lex:Loc Settings}" IsEnabled="{Binding ViewEnabled,Mode=OneWay}">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <WrapPanel Orientation="Vertical" Margin="8,16,8,8">
@@ -317,6 +322,10 @@
                                 <Button x:Name="html5GameBtn" BorderThickness="0" Margin="0,0,0,4" Background="{x:Null}" BorderBrush="{x:Null}"
                                     Style="{StaticResource NoBGHoverBtn}" Click="Html5GameBtn_Click" >
                                     <TextBlock Text="{lex:Loc GamepadTest}" TextDecorations="Underline" Foreground="#FF3881D8" Cursor="Hand" />
+                                </Button>
+                                <Button x:Name="hidNinjaBtn" BorderThickness="0" Margin="0,0,0,4" Background="{x:Null}" BorderBrush="{x:Null}"
+                                    Style="{StaticResource NoBGHoverBtn}" Click="HidNinjaBtn_Click" >
+                                    <TextBlock Text="{lex:Loc HidNinja}" TextDecorations="Underline" Foreground="#FF3881D8" Cursor="Hand" />
                                 </Button>
                                 <Button x:Name="driverSetupBtn" BorderThickness="0" Margin="0,0,0,4" Background="{x:Null}" BorderBrush="{x:Null}"
                                    Style="{StaticResource NoBGHoverBtn}"  Click="DriverSetupBtn_Click">
